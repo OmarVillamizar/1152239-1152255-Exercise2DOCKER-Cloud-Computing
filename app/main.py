@@ -17,3 +17,10 @@ def leer_notes():
         return {"notas": []}
     with open(DATA_FILE, "r") as f:
         return {"notas": f.read().splitlines()}
+    
+@app.get("/conteo")
+def contar_notes():
+    if not os.path.exists(DATA_FILE):
+        return {"conteo": 0}
+    with open(DATA_FILE, "r") as f:
+        return {"conteo": len(f.readlines())}
