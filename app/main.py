@@ -24,3 +24,8 @@ def contar_notes():
         return {"conteo": 0}
     with open(DATA_FILE, "r") as f:
         return {"conteo": len(f.readlines())}
+    
+@app.get("/autor")
+def obtener_autor():
+    autor = os.getenv("AUTOR", "Desconocido")
+    return {"autor": autor}
