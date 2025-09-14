@@ -1,15 +1,17 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 import os
+
+from nota import Nota
 
 app = FastAPI()
 DATA_FILE = "/data/notas.txt"
 
 @app.post("/nota")
 async def guardar_note(request: Request):
-    nota = await request.body()
-    with open(DATA_FILE, "a") as f:
-        f.write(nota.decode() + "\n")
-    return {"mensaje": "nota guardada"}
+    datos = await request.json()
+    nota = Nota(titulo=datos['titulo'], contenido=datos['contenido'])
+    nota.guardar()
+    return {"mensaje": "nota guardada: "+str(nota)}
 
 @app.get("/")
 def leer_notes():
@@ -29,3 +31,11 @@ def contar_notes():
 def obtener_autor():
     autor = os.getenv("AUTOR", "Desconocido")
     return {"autor": autor}
+
+@app.get("/notas-db")
+def obtener_notas():
+    try:
+        data = Nota.todas()
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
