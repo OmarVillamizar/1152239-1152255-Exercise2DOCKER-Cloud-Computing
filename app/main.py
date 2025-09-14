@@ -10,8 +10,7 @@ DATA_FILE = "/data/notas.txt"
 async def guardar_note(request: Request):
     datos = await request.json()
     nota = Nota(titulo=datos['titulo'], contenido=datos['contenido'])
-    nota.guardar()
-    return {"mensaje": "nota guardada: "+str(nota)}
+    return nota.guardar()
 
 @app.get("/")
 def leer_notes():
